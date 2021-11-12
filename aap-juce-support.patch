@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d740938..9139005 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,6 +11,7 @@ juce_add_plugin(SimpleReverb
+     PLUGIN_CODE "Srvb"
+     FORMATS "VST3" "AU" "Standalone" 
+     VST3_CATEGORIES "Fx" 
++    NEEDS_CURL "TRUE"
+     AU_MAIN_TYPE "kAudioUnitType_Effect")
+ 
+ target_compile_features(SimpleReverb PUBLIC cxx_std_17)
+@@ -22,7 +23,38 @@ target_compile_definitions(SimpleReverb PUBLIC
+ add_subdirectory(Resources)
+ add_subdirectory(Source)
+ 
+-target_link_libraries(SimpleReverb PUBLIC 
++# begin AAP specifics. -->
++
++# They are needed in desktop too, for generate-aap-metadata.
++include_directories(
++        "${AAP_DIR}/native/androidaudioplugin/core/include"
++        "${AAP_DIR}/native/plugin-api/include"
++        )
++juce_add_module(${AAP_JUCE_DIR}/modules/juceaap_audio_plugin_client)
++
++# begin Android specifics -->
++# It is not beautiful, but there does not seem to be any way to add custom include directory for modules.
++
++if (ANDROID)
++
++# dependencies
++find_library(log "log")
++find_library(android "android")
++find_library(glesv2 "GLESv2")
++find_library(egl "EGL")
++set(cpufeatures_lib "cpufeatures")
++set(oboe_lib "oboe")
++
++target_include_directories(SimpleReverb PRIVATE
++        "${ANDROID_NDK}/sources/android/cpufeatures"
++        "${OBOE_DIR}/include"
++        )
++
++endif (ANDROID)
++# <-- end Android specifics
++# <-- end AAP specifics
++
++target_link_libraries(SimpleReverb PUBLIC
+     juce::juce_audio_basics
+     juce::juce_audio_devices
+     juce::juce_audio_formats
+@@ -37,4 +69,24 @@ target_link_libraries(SimpleReverb PUBLIC
+     juce::juce_gui_basics
+     juce::juce_gui_extra)
+ 
+-juce_generate_juce_header(SimpleReverb)
+\ No newline at end of file
++# begin AAP specifics. -->
++# It is needed in desktop too, for generate-aap-metadata.
++target_link_libraries(SimpleReverb PUBLIC
++    juceaap_audio_plugin_client
++    )
++
++# begin Android specifics -->
++if (ANDROID)
++target_link_libraries(SimpleReverb PUBLIC
++    ${log}
++    ${android}
++    ${glesv2}
++    ${egl}
++    ${cpufeatures_lib}
++    ${oboe_lib}
++    )
++endif (ANDROID)
++# <-- end Android specifics
++# <-- end AAP specifics
++
++juce_generate_juce_header(SimpleReverb)
