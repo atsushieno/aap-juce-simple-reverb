@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<plugins xmlns="urn:org.androidaudioplugin.core" xmlns:pp="urn:org.androidaudioplugin.port">
+<plugins xmlns="urn:org.androidaudioplugin.core">
   <plugin name="SimpleReverb" category="Effect" author="Suzuki Kengo" manufacturer="https://suzuki-kengo.dev"
           unique-id="juceaap:53727662" library="libSimpleReverb_Standalone.so"
           entrypoint="GetJuceAAPFactoryStandalone" assets="">
+    <extensions>
+      <extension uri="urn://androidaudioplugin.org/extensions/presets/v1"/>
+    </extensions>
+    <parameters xmlns="urn://androidaudioplugin.org/extensions/parameters">
+      <parameter id="0" name="size" direction="input" minimum="0.0" maximum="1.0"
+                 default="0.5" content="other"/>
+      <parameter id="1" name="damp" direction="input" minimum="0.0" maximum="1.0"
+                 default="0.5" content="other"/>
+      <parameter id="2" name="width" direction="input" minimum="0.0" maximum="1.0"
+                 default="0.5" content="other"/>
+      <parameter id="3" name="dw" direction="input" minimum="0.0" maximum="1.0"
+                 default="0.5" content="other"/>
+      <parameter id="4" name="freeze" direction="input" default="0.0" minimum="0.0"
+                 maximum="1.0" content="other"/>
+    </parameters>
     <ports>
-      <port name="size" direction="input" pp:maximum="1.0" content="other"/>
-      <port name="damp" direction="input" pp:maximum="1.0" content="other"/>
-      <port name="width" direction="input" pp:maximum="1.0" content="other"/>
-      <port name="dw" direction="input" pp:maximum="1.0" content="other"/>
-      <port name="freeze" direction="input" pp:default="0.0" pp:maximum="1.0"
-            content="other"/>
       <port direction="output" content="audio" name="Left"/>
       <port direction="output" content="audio" name="Right"/>
       <port direction="input" content="audio" name="Left"/>
       <port direction="input" content="audio" name="Right"/>
+      <port direction="input" content="midi2" name="MIDI In"/>
+      <port direction="output" content="midi2" name="MIDI Out"/>
     </ports>
   </plugin>
 </plugins>
