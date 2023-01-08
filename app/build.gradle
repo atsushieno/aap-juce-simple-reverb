@@ -36,9 +36,11 @@ android {
     }
 
     dependencies {
-        implementation "androidx.startup:startup-runtime:1.1.0"
-        implementation "org.androidaudioplugin:androidaudioplugin:0.7.4"
+        implementation "androidx.startup:startup-runtime:1.1.1"
+        implementation "org.androidaudioplugin:androidaudioplugin:$aap_version"
     }
+
+    ndkVersion "$ndk_version"
 }
 dependencies {
     implementation "androidx.core:core-ktx:1.9.0"
