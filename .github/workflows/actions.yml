@@ -48,7 +48,7 @@ jobs:
     - name: build
       run: make
     - name: upload-artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: apks
         path: app/build/outputs/**/*.apk
