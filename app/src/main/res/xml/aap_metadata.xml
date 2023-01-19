@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugins xmlns="urn:org.androidaudioplugin.core">
-  <plugin name="SimpleReverb" category="Effect" author="Suzuki Kengo" manufacturer="https://suzuki-kengo.dev"
+  <plugin name="AAP SimpleReverb" category="Effect" author="AAP / Suzuki Kengo" manufacturer="https://github.com/atsushieno/aap-juce-simple-reverb"
           unique-id="juceaap:53727662" library="libSimpleReverb_Standalone.so"
           entrypoint="GetJuceAAPFactoryStandalone" assets="">
     <extensions>
