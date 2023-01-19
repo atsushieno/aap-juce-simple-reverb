@@ -7,7 +7,7 @@ plugins {
 android {
     compileSdkVersion 33
     defaultConfig {
-        applicationId "org.androidaudioplugin.ports.juce.szkkng_simple_reverb"
+        applicationId "org.androidaudioplugin.ports.juce.simple_reverb"
         minSdkVersion    29
         targetSdkVersion 33
         externalNativeBuild {
