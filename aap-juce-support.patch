@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d740938..a78309a 100644
+index d740938..d9e7efa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -11,6 +11,7 @@ juce_add_plugin(SimpleReverb
@@ -10,7 +10,7 @@ index d740938..a78309a 100644
      AU_MAIN_TYPE "kAudioUnitType_Effect")
  
  target_compile_features(SimpleReverb PUBLIC cxx_std_17)
-@@ -22,7 +23,37 @@ target_compile_definitions(SimpleReverb PUBLIC
+@@ -22,7 +23,38 @@ target_compile_definitions(SimpleReverb PUBLIC
  add_subdirectory(Resources)
  add_subdirectory(Source)
  
@@ -21,7 +21,7 @@ index d740938..a78309a 100644
 +include_directories(
 +        "${AAP_DIR}/include"
 +        )
-+juce_add_module(${AAP_JUCE_DIR}/modules/juceaap_audio_plugin_client)
++juce_add_module(${AAP_JUCE_DIR}/aap-modules/juceaap_audio_plugin_client)
 +
 +# begin Android specifics -->
 +# It is not beautiful, but there does not seem to be any way to add custom include directory for modules.
@@ -41,6 +41,7 @@ index d740938..a78309a 100644
 +        "${OBOE_DIR}/include"
 +        )
 +
++add_compile_definitions([[JUCE_DONT_AUTO_OPEN_MIDI_DEVICES_ON_MOBILE=1]])
 +endif (ANDROID)
 +# <-- end Android specifics
 +# <-- end AAP specifics
@@ -49,7 +50,7 @@ index d740938..a78309a 100644
      juce::juce_audio_basics
      juce::juce_audio_devices
      juce::juce_audio_formats
-@@ -37,4 +68,24 @@ target_link_libraries(SimpleReverb PUBLIC
+@@ -37,4 +69,24 @@ target_link_libraries(SimpleReverb PUBLIC
      juce::juce_gui_basics
      juce::juce_gui_extra)
  
