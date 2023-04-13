@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugins xmlns="urn:org.androidaudioplugin.core">
-  <plugin name="AAP SimpleReverb" category="Effect" author="AAP / Suzuki Kengo" manufacturer="https://github.com/atsushieno/aap-juce-simple-reverb"
+  <plugin name="SimpleReverb" category="Effect" author="Suzuki Kengo" developer="Suzuki Kengo"
           unique-id="juceaap:53727662" library="libSimpleReverb_Standalone.so"
-          entrypoint="GetJuceAAPFactoryStandalone" assets="">
+          entrypoint="GetJuceAAPFactoryStandalone">
     <extensions>
-      <extension uri="urn://androidaudioplugin.org/extensions/presets/v1"/>
+      <extension uri="urn://androidaudioplugin.org/extensions/plugin-info/v2"/>
+      <extension uri="urn://androidaudioplugin.org/extensions/presets/v2"/>
+      <extension uri="urn://androidaudioplugin.org/extensions/state/v2"/>
+      <extension uri="urn://androidaudioplugin.org/extensions/midi2/v2"/>
+      <extension uri="urn://androidaudioplugin.org/extensions/gui/v2"/>
     </extensions>
     <parameters xmlns="urn://androidaudioplugin.org/extensions/parameters">
       <parameter id="0" name="size" direction="input" minimum="0.0" maximum="1.0"
@@ -16,16 +20,15 @@
                  default="0.5" content="other"/>
       <parameter id="3" name="dw" direction="input" minimum="0.0" maximum="1.0"
                  default="0.5" content="other"/>
-      <parameter id="4" name="freeze" direction="input" default="0.0" minimum="0.0"
-                 maximum="1.0" content="other"/>
+      <parameter id="4" name="freeze" direction="input" minimum="0.0" maximum="1.0"
+                 default="0.0" content="other"/>
     </parameters>
     <ports>
       <port direction="output" content="audio" name="Left"/>
       <port direction="output" content="audio" name="Right"/>
       <port direction="input" content="audio" name="Left"/>
       <port direction="input" content="audio" name="Right"/>
-      <port direction="input" content="midi2" name="MIDI In"/>
-      <port direction="output" content="midi2" name="MIDI Out"/>
+      <port direction="input" content="midi2" name="MIDI input"/>
     </ports>
   </plugin>
 </plugins>
