@@ -5,22 +5,23 @@ plugins {
 
 
 android {
-    compileSdkVersion 33
+    compileSdk = 33
     defaultConfig {
         applicationId "org.androidaudioplugin.ports.juce.simple_reverb"
-        minSdkVersion    29
-        targetSdkVersion 33
+        minSdk = 29
+        targetSdk = 33
         externalNativeBuild {
             cmake {
-                arguments "-DJUCE_DIR=${System.env.JUCE_DIR != null ? System.env.JUCE_DIR : "../external/SimpleReverb/External/JUCE"}", "-DAAP_DIR=${System.env.AAP_DIR != null ? System.env.AAP_DIR : ''}", "-DAAP_JUCE_DIR=${System.env.AAP_JUCE_DIR != null ? System.env.AAP_JUCE_DIR : ''}", "-DANDROID_STL=c++_shared", "-DANDROID_CPP_FEATURES=exceptions rtti"
-            }
+                arguments "-DAAP_DIR=${System.env.AAP_DIR != null ? System.env.AAP_DIR : "$projectDir/../external/aap-core"}",
+                        "-DAAP_JUCE_DIR=${System.env.AAP_JUCE_DIR != null ? System.env.AAP_JUCE_DIR : "$projectDir/../external/aap-juce"}",
+                        "-DANDROID_STL=c++_shared", "-DANDROID_CPP_FEATURES=exceptions rtti"            }
         }
     }
 
     externalNativeBuild {
         cmake {
-            version = "3.22.1"
-            path "CMakeLists.txt"
+            version = libs.versions.cmake.get()
+            path "src/main/cpp/CMakeLists.txt"
         }
     }
 
@@ -41,6 +42,6 @@ android {
         implementation libs.aap.core
     }
 
-    ndkVersion "$ndk_version"
+    ndkVersion libs.versions.ndk.get()
 }
 
