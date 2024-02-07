@@ -1,86 +1,73 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d740938..34ada08 100644
+index 4aff240..179b290 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,6 +11,7 @@ juce_add_plugin(SimpleReverb
+@@ -40,7 +40,7 @@ juce_add_plugin("${PROJECT_NAME}"
+     COMPANY_EMAIL "zukkesukke23@gmail.com"
+     PLUGIN_MANUFACTURER_CODE "Szkn"
      PLUGIN_CODE "Srvb"
-     FORMATS "VST3" "AU" "Standalone" 
-     VST3_CATEGORIES "Fx" 
-+    NEEDS_CURL "TRUE"
-     AU_MAIN_TYPE "kAudioUnitType_Effect")
- 
- target_compile_features(SimpleReverb PUBLIC cxx_std_17)
-@@ -22,7 +23,59 @@ target_compile_definitions(SimpleReverb PUBLIC
- add_subdirectory(Resources)
- add_subdirectory(Source)
- 
--target_link_libraries(SimpleReverb PUBLIC 
-+# begin AAP specifics -->
-+set (APP_NAME SimpleReverb)
-+set (OBOE_DIR External/JUCE/modules/juce_audio_devices/native/oboe)
+-    FORMATS ${formats}
++    FORMATS ${formats} Standalone
+     COPY_PLUGIN_AFTER_BUILD TRUE
+     IS_SYNTH FALSE     
+     NEEDS_MIDI_INPUT FALSE
+@@ -78,3 +78,52 @@ target_link_libraries("${PROJECT_NAME}"
+         juce::juce_recommended_config_flags
+         juce::juce_recommended_lto_flags
+         juce::juce_recommended_warning_flags)
 +
-+# They are needed in desktop too, for generate-aap-metadata.
++# begin JUCEAAP specific -->
++# It is not beautiful, but there does not seem to be any way to add custom include directory for modules.
 +include_directories(
 +        "${AAP_DIR}/include"
 +)
 +
-+message("AAP_DIR: ${AAP_DIR}")
-+message("AAP_JUCE_DIR: ${AAP_JUCE_DIR}")
-+juce_add_modules(${AAP_JUCE_DIR}/aap-modules/aap_audio_processors)
++find_package (androidaudioplugin REQUIRED CONFIG)
 +
-+if (ANDROID)
-+        add_library("cpufeatures" STATIC "${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c")
-+        set_source_files_properties("${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c" PROPERTIES COMPILE_FLAGS "-Wno-sign-conversion -Wno-gnu-statement-expression")
-+
-+        # dependencies
-+        find_library(log "log")
-+        find_library(android "android")
-+        find_library(glesv2 "GLESv2")
-+        find_library(egl "EGL")
-+        set(cpufeatures_lib "cpufeatures")
-+
-+        target_include_directories(${APP_NAME} PRIVATE
-+                "${ANDROID_NDK}/sources/android/cpufeatures"
-+                )
-+        add_compile_definitions(
-+                [[JUCE_ANDROID=1]]
-+                [[JUCE_DONT_AUTO_OPEN_MIDI_DEVICES_ON_MOBILE=1]]
-+                [[JUCE_PUSH_NOTIFICATIONS_ACTIVITY="com/rmsl/juce/JuceActivity"]]
-+                [[JUCE_PUSH_NOTIFICATIONS=1]]
-+                [[JUCE_USE_ANDROID_OBOE=0]] # we don't need it at plugin side
-+        )
-+
-+        target_link_libraries(${APP_NAME}
-+                PRIVATE
-+                ${log}
-+                ${android}
-+                ${glesv2}
-+                ${egl}
-+                ${cpufeatures_lib}
-+                )
-+endif (ANDROID)
-+
-+target_link_libraries(${APP_NAME}
++juce_add_module(${AAP_JUCE_DIR}/aap-modules/aap_audio_processors)
++target_link_libraries("${PROJECT_NAME}"
 +        PRIVATE
 +        aap_audio_processors
-+        )
-+# <-- end Android specifics
-+# <-- end AAP specifics
++)
 +
-+target_link_libraries(SimpleReverb PUBLIC
-     juce::juce_audio_basics
-     juce::juce_audio_devices
-     juce::juce_audio_formats
-@@ -37,4 +90,4 @@ target_link_libraries(SimpleReverb PUBLIC
-     juce::juce_gui_basics
-     juce::juce_gui_extra)
- 
--juce_generate_juce_header(SimpleReverb)
++if (ANDROID)
++
++# dependencies
++find_library(log "log")
++find_library(android "android")
++find_library(glesv2 "GLESv2")
++find_library(egl "EGL")
++set(cpufeatures_lib "cpufeatures")
++set(oboe_lib "oboe")
++set(CMAKE_CXX_FLAGS_RELEASE "-O3")
++
++target_compile_definitions("${PROJECT_NAME}"
++        PUBLIC
++        JUCEAAP_HAVE_AUDIO_PLAYHEAD_NEW_POSITION_INFO=1
++        JUCE_ANDROID=1
++        JUCE_DONT_AUTO_OPEN_MIDI_DEVICES_ON_MOBILE=1
++        # LAMESPEC: JuceActivity blindly calls appOnResume() which is actually generated ONLY IF  JUCE_PUSH_NOTIFICATIONS_ACTIVITY is specified.
++        # What happens if not? java.lang.UnsatisfiedLinkError: No implementation found for void com.rmsl.juce.JuceActivity.appOnResume() !
++        -DJUCE_PUSH_NOTIFICATIONS_ACTIVITY="com/rmsl/juce/JuceActivity"
++        -DJUCE_PUSH_NOTIFICATIONS=1
++)
++
++target_link_libraries("${PROJECT_NAME}"
++        PRIVATE
++        ${log}
++        ${android}
++        ${glesv2}
++        ${egl}
++        #${cpufeatures_lib}
++        androidaudioplugin::androidaudioplugin
++)
++
++endif (ANDROID)
++# <-- end JUCEAAP specific
 \ No newline at end of file
-+juce_generate_juce_header(SimpleReverb)
 diff --git a/External/JUCE b/External/JUCE
 --- a/External/JUCE
 +++ b/External/JUCE
 @@ -1 +1 @@
--Subproject commit e6ec1819ec0a59a7cfe82d8ce72367f64e0a4bb0
-+Subproject commit e6ec1819ec0a59a7cfe82d8ce72367f64e0a4bb0-dirty
+-Subproject commit 69795dc8e589a9eb5df251b6dd994859bf7b3fab
++Subproject commit 69795dc8e589a9eb5df251b6dd994859bf7b3fab-dirty

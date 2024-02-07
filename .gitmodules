@@ -10,3 +10,6 @@
 [submodule "external/SimpleReverb"]
 	path = external/SimpleReverb
 	url = https://github.com/szkkng/SimpleReverb.git
+[submodule "external/simple-reverb"]
+	path = external/simple-reverb
+	url = https://github.com/szkkng/simple-reverb.git
